@@ -12,8 +12,15 @@ $(EXE_NAME): $(OBJ_FILES)
 $(OBJ_FILES): $(SRC_FILES)
 	$(CC) $(CFLAGS) -c $(SRC_FILES)
 
+check: test_edist
+	./test_edist
+
+test_edist: test_edist.c edist.c
+	$(CC) $(CFLAGS) -o test_edist test_edist.c edist.c -lastrounit
+
 clean:
 	rm -f $(EXE_NAME)
+	rm -f test_edist
 	rm -f *.o
 
-.PHONY: all clean
+.PHONY: all clean test
