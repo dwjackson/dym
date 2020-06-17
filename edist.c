@@ -7,7 +7,7 @@ int dym_edist(const char *s1, const char *s2)
 	size_t s2_len = strlen(s2);
 	size_t i;
 	int distance = 0;
-	size_t len = s1_len > s2_len ? s1_len : s2_len;
+	size_t len = s1_len < s2_len ? s1_len : s2_len;
 	char ch1, ch2;
 
 	if (s1_len == 0 && s2_len == 0) {
@@ -25,6 +25,11 @@ int dym_edist(const char *s1, const char *s2)
 		if (ch1 != ch2) {
 			distance++;
 		}
+	}
+	if (s1_len > s2_len) {
+		distance += s1_len - s2_len;
+	} else if (s2_len > s1_len) {
+		distance += s2_len - s1_len;
 	}
 
 	return distance;
