@@ -9,16 +9,14 @@
 #define UNSET_DISTANCE -1
 
 struct dym_match {
-	char *str;
 	int dist;
+	char str[LINE_BUFSIZE];
 };
 
 int main(int argc, char *argv[])
 {
 	char line[LINE_BUFSIZE];
 	FILE *fp = stdin;
-	char closest[LINE_BUFSIZE];
-	int closest_dist = UNSET_DISTANCE;
 	int dist;
 	char *input;
 	size_t line_len;
@@ -29,6 +27,8 @@ int main(int argc, char *argv[])
 	char *message = NULL;
 	int mflag = 0;
 	int vflag = 0;
+
+	struct dym_match closest;
 
 	if (argc < 2) {
 		printf(USAGE_FMT, argv[0]);
@@ -67,17 +67,18 @@ int main(int argc, char *argv[])
 		}
 		line[strlen(line)-1] = '\0';
 		dist = dym_edist(input, line);
-		if (closest_dist == UNSET_DISTANCE || dist < closest_dist) {
-			closest_dist = dist;
-			strcpy(closest, line);
+		if (closest.dist == UNSET_DISTANCE || dist < closest.dist) {
+			closest.dist = dist;
+			strcpy(closest.str, line);
 		}
 	}
+
 	if (mflag) {
 		printf("%s", message);
 	}
-	printf("%s", closest);
+	printf("%s", closest.str);
 	if (vflag) {
-		printf(" %d", closest_dist);
+		printf(" %d", closest.dist);
 	}
 	printf("\n");
 
