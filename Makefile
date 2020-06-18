@@ -12,8 +12,9 @@ $(EXE_NAME): $(OBJ_FILES)
 $(OBJ_FILES): $(SRC_FILES)
 	$(CC) $(CFLAGS) -c $(SRC_FILES)
 
-check: test_edist
+check: test_edist $(EXE_NAME)
 	./test_edist
+	./test_dym.sh
 
 test_edist: test_edist.c edist.c
 	$(CC) $(CFLAGS) -o test_edist test_edist.c edist.c -lastrounit

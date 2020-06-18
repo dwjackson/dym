@@ -29,33 +29,6 @@ The `dym` command supports the following command line options:
 * `-i` ignore case
 * `-v` verbose, print the edit distance from the match(es)
 
-## Library: libdym
-
-DYM comes with a small C library that mimics the functionality of the
-standalone application.
-
-To find the edit distance between two strings:
-
-```c
-int dist = dym_edist("statr", "start");
-```
-
-To find the closest match(es) in a list of strings:
-
-```c
-struct dym_db db;
-dym_db_init(&db);
-dym_db_add("start");
-dym_db_add("stop");
-dym_db_add("restart");
-int count = dym_closest(struct dym_match **matches, const char *s, dym_db *db);
-int i;
-for (i = 0; i < count; i++) {
-	printf("Match %d: %s\n", i, dym_match[i].str);
-}
-dym_db_destroy(&db);
-```
-
 ## License
 
 DYM is licensed under the MIT license.
