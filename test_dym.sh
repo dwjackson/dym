@@ -55,6 +55,11 @@ test_explicit_list_with_delim() {
 	assert_eq "start" "$actual"
 }
 
+test_unicode() {
+	actual=`./dym -v -i -e 'über uber' 'Über'`
+	assert_eq "über 0" "$actual"
+}
+
 test_basic
 test_file
 test_verbose
@@ -63,4 +68,5 @@ test_everything
 test_ignore_case
 test_explicit_list
 test_explicit_list_with_delim
+test_unicode
 echo 'All tests passed!'

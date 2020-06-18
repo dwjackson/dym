@@ -1,5 +1,5 @@
 EXE_NAME = dym
-SRC_FILES = dym.c edist.c
+SRC_FILES = dym.c edist.c lowercase.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 MAN_PAGE = dym.1
 CC = cc

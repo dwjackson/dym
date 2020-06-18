@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ctype.h>
 #include "dym.h"
 
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
@@ -16,7 +15,6 @@ struct dym_match {
 	char str[LINE_BUFSIZE];
 };
 
-static void lowercase(char *str);
 static void help(const char *progname);
 static char *next();
 
@@ -172,15 +170,6 @@ int main(int argc, char *argv[])
 	fclose(fp);
 
 	return 0;
-}
-
-static void lowercase(char *str)
-{
-	size_t i;
-	size_t len = strlen(str);
-	for (i = 0; i < len; i++) {
-		str[i] = tolower(str[i]);
-	}
 }
 
 static void help(const char *progname)
