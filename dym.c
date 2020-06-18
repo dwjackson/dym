@@ -8,6 +8,11 @@
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
 
+struct dym_match {
+	char *str;
+	int dist;
+};
+
 int main(int argc, char *argv[])
 {
 	char line[LINE_BUFSIZE];
@@ -23,12 +28,13 @@ int main(int argc, char *argv[])
 	char *filename;
 	char *message = NULL;
 	int mflag = 0;
+	int vflag = 0;
 
 	if (argc < 2) {
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "f:m:")) != -1) {
+	while ((opt = getopt(argc, argv, "f:m:v")) != -1) {
 		switch (opt) {
 			case 'f':
 				filename = optarg;
@@ -42,7 +48,11 @@ int main(int argc, char *argv[])
 				message = optarg;
 				mflag = 1;
 				break;
+			case 'v':
+				vflag = 1;
+				break;
 			default:
+				exit(EXIT_FAILURE);
 				break;
 		}
 	}
@@ -65,7 +75,11 @@ int main(int argc, char *argv[])
 	if (mflag) {
 		printf("%s", message);
 	}
-	printf("%s\n", closest);
+	printf("%s", closest);
+	if (vflag) {
+		printf(" %d", closest_dist);
+	}
+	printf("\n");
 
 	fclose(fp);
 

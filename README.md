@@ -27,6 +27,7 @@ The `dym` command supports the following command line options:
 * `-f [FILENAME]` read the list of possible matches from a file
 * `-c [COUNT]` return up to COUNT closest matches, ties printed alphabetically
 * `-i` ignore case
+* `-v` verbose, print the edit distance from the match(es)
 
 ## Library: libdym
 
