@@ -25,14 +25,14 @@ $(MAN_PAGE).gz: $(MAN_PAGE)
 	gzip -c $(MAN_PAGE) > $(MAN_PAGE).gz
 
 install: $(EXE_NAME) $(MAN_PAGE).gz
-	mkdir -p $(DISTDIR)$(PREFIX)/bin
-	mkdir -p $(DISTDIR)$(PREFIX)/share/man/man1
-	install $(EXE_NAME) $(DISTDIR)$(PREFIX)/bin
-	install $(MAN_PAGE).gz $(DISTSIR)$(PREFIX)/share/man/man1
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
+	install $(EXE_NAME) $(DESTDIR)$(PREFIX)/bin
+	install $(MAN_PAGE).gz $(DESTSIR)$(PREFIX)/share/man/man1
 
 uninstall:
-	rm $(DISTDIR)$(PREFIX)/bin/$(EXE_NAME)
-	rm $(DISTSIR)$(PREFIX)/share/man/man1/$(MAN_PAGE).gz
+	rm $(DESTDIR)$(PREFIX)/bin/$(EXE_NAME)
+	rm $(DESTSIR)$(PREFIX)/share/man/man1/$(MAN_PAGE).gz
 
 clean:
 	rm -f $(EXE_NAME)

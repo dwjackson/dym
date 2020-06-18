@@ -5,11 +5,12 @@
 #include <locale.h>
 #include "dym.h"
 
+#define VERSION "1.0.0"
+
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
 #define COUNT_MAX 1000
-#define VERSION "1.0.0"
 
 struct dym_match {
 	int dist;
