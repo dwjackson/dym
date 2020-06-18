@@ -1,7 +1,6 @@
 #include "dym.h"
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h> // DEBUG
 
 static int levenshtein(const char *s1, size_t l1, const char *s2, size_t l2);
 static int indicator(char a, char b);

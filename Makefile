@@ -1,5 +1,5 @@
 EXE_NAME = dym
-SRC_FILES = dym.c
+SRC_FILES = dym.c edist.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 CC = cc
 CFLAGS = -g -O0 -Wall -Wextra -pedantic
