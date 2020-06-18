@@ -21,12 +21,14 @@ int main(int argc, char *argv[])
 	extern int optind;
 	extern char *optarg;
 	char *filename;
+	char *message = NULL;
+	int mflag = 0;
 
 	if (argc < 2) {
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "f:")) != -1) {
+	while ((opt = getopt(argc, argv, "f:m:")) != -1) {
 		switch (opt) {
 			case 'f':
 				filename = optarg;
@@ -35,6 +37,10 @@ int main(int argc, char *argv[])
 					perror(filename);
 					exit(EXIT_FAILURE);
 				}
+				break;
+			case 'm':
+				message = optarg;
+				mflag = 1;
 				break;
 			default:
 				break;
@@ -55,6 +61,9 @@ int main(int argc, char *argv[])
 			closest_dist = dist;
 			strcpy(closest, line);
 		}
+	}
+	if (mflag) {
+		printf("%s", message);
 	}
 	printf("%s\n", closest);
 
