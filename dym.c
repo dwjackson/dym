@@ -9,6 +9,7 @@
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
 #define COUNT_MAX 1000
+#define VERSION "0.1.0"
 
 struct dym_match {
 	int dist;
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "c:f:im:v")) != -1) {
+	while ((opt = getopt(argc, argv, "c:f:im:vV")) != -1) {
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
@@ -67,6 +68,10 @@ int main(int argc, char *argv[])
 				break;
 			case 'v':
 				vflag = 1;
+				break;
+			case 'V':
+				printf("%s version %s\n", argv[0], VERSION);
+				exit(EXIT_SUCCESS);
 				break;
 			default:
 				exit(EXIT_FAILURE);

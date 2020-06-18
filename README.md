@@ -28,6 +28,8 @@ The `dym` command supports the following command line options:
 * `-c [COUNT]` return up to COUNT closest matches, ties printed alphabetically
 * `-i` ignore case
 * `-v` verbose, print the edit distance from the match(es)
+* `-V` print version information
+* `-h` print help
 
 ## License
 
