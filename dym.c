@@ -125,13 +125,16 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	if (mflag) {
+		printf("%s\n", message);
+	}
 	for (i = 0; i < count; i++) {
 		match = &closest[i];
 		if (match->dist == UNSET_DISTANCE) {
 			break;
 		}
 		if (mflag) {
-			printf("%s", message);
+			printf("\t");
 		}
 		printf("%s", match->str);
 		if (vflag) {
