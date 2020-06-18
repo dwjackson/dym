@@ -7,6 +7,7 @@
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
+#define COUNT_MAX 1000
 
 struct dym_match {
 	int dist;
@@ -27,15 +28,24 @@ int main(int argc, char *argv[])
 	char *message = NULL;
 	int mflag = 0;
 	int vflag = 0;
-
-	struct dym_match closest;
+	struct dym_match *closest = NULL;
+	int count = 1;
+	struct dym_match *match;
+	int i;
 
 	if (argc < 2) {
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "f:m:v")) != -1) {
+	while ((opt = getopt(argc, argv, "c:f:m:v")) != -1) {
 		switch (opt) {
+			case 'c':
+				count = atoi(optarg);
+				if (count == 0 || count > COUNT_MAX) {
+					printf("count must be > 0 and < %d\n", COUNT_MAX + 1);
+					exit(EXIT_FAILURE);
+				}
+				break;
 			case 'f':
 				filename = optarg;
 				fp = fopen(filename, "r");
@@ -57,6 +67,16 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	closest = malloc(sizeof(struct dym_match) * count);
+	if (closest == NULL) {
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	for (i = 0; i < count; i++) {
+		closest[i].dist = UNSET_DISTANCE;
+		memset(closest[i].str, 0, LINE_BUFSIZE);
+	}
+
 	input = argv[optind];
 
 	while (fgets(line, LINE_BUFSIZE, fp) != NULL) {
@@ -67,21 +87,37 @@ int main(int argc, char *argv[])
 		}
 		line[strlen(line)-1] = '\0';
 		dist = dym_edist(input, line);
-		if (closest.dist == UNSET_DISTANCE || dist < closest.dist) {
-			closest.dist = dist;
-			strcpy(closest.str, line);
+
+		for (i = 0; i < count; i++) {
+			match = &closest[i];
+			if (match->dist == UNSET_DISTANCE || dist < match->dist) {
+				if (i + 1 < count) {
+					/* Shift things down, lowest dist is always first */
+					memmove(&closest[i+1], &closest[i], sizeof(struct dym_match) * (count - i - 1));
+				}
+				match->dist = dist;
+				strcpy(match->str, line);
+				break;
+			}
 		}
 	}
 
-	if (mflag) {
-		printf("%s", message);
+	for (i = 0; i < count; i++) {
+		match = &closest[i];
+		if (match->dist == UNSET_DISTANCE) {
+			break;
+		}
+		if (mflag) {
+			printf("%s", message);
+		}
+		printf("%s", match->str);
+		if (vflag) {
+			printf(" %d", match->dist);
+		}
+		printf("\n");
 	}
-	printf("%s", closest.str);
-	if (vflag) {
-		printf(" %d", closest.dist);
-	}
-	printf("\n");
 
+	free(closest);
 	fclose(fp);
 
 	return 0;
