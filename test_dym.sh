@@ -40,9 +40,15 @@ test_everything() {
 	assert_eq "start 2 status 2" "$actual"
 }
 
+test_ignore_case() {
+	actual=`./dym -v -i -f test.txt StATr`
+	assert_eq "start 2" "$actual"
+}
+
 test_basic
 test_file
 test_verbose
 test_multiple_matches
 test_everything
+test_ignore_case
 echo 'All tests passed!'

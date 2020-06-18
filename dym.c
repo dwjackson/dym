@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "dym.h"
 
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
@@ -13,6 +14,8 @@ struct dym_match {
 	int dist;
 	char str[LINE_BUFSIZE];
 };
+
+static void lowercase(char *str);
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +31,7 @@ int main(int argc, char *argv[])
 	char *message = NULL;
 	int mflag = 0;
 	int vflag = 0;
+	int iflag = 0;
 	struct dym_match *closest = NULL;
 	int count = 1;
 	struct dym_match *match;
@@ -37,7 +41,7 @@ int main(int argc, char *argv[])
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "c:f:m:v")) != -1) {
+	while ((opt = getopt(argc, argv, "c:f:im:v")) != -1) {
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
@@ -53,6 +57,9 @@ int main(int argc, char *argv[])
 					perror(filename);
 					exit(EXIT_FAILURE);
 				}
+				break;
+			case 'i':
+				iflag = 1;
 				break;
 			case 'm':
 				message = optarg;
@@ -78,6 +85,9 @@ int main(int argc, char *argv[])
 	}
 
 	input = argv[optind];
+	if (iflag) {
+		lowercase(input);
+	}
 
 	while (fgets(line, LINE_BUFSIZE, fp) != NULL) {
 		line_len = strlen(line);
@@ -86,6 +96,9 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		line[strlen(line)-1] = '\0';
+		if (iflag) {
+			lowercase(line);
+		}
 		dist = dym_edist(input, line);
 
 		for (i = 0; i < count; i++) {
@@ -121,4 +134,13 @@ int main(int argc, char *argv[])
 	fclose(fp);
 
 	return 0;
+}
+
+static void lowercase(char *str)
+{
+	size_t i;
+	size_t len = strlen(str);
+	for (i = 0; i < len; i++) {
+		str[i] = tolower(str[i]);
+	}
 }
