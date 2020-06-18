@@ -1,4 +1,4 @@
-# DYM: Did you mean..?
+# DYM: Did you mean...?
 
 DYM is a utility that does "fuzzy" string matching. Given a particular input
 string and set of valid possible strings, DYM will find the closest match(es).
