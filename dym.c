@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <locale.h>
 #include "dym.h"
 
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
 #define COUNT_MAX 1000
-#define VERSION "0.1.0"
+#define VERSION "1.0.0"
 
 struct dym_match {
 	int dist;
@@ -42,6 +43,8 @@ int main(int argc, char *argv[])
 	int count = 1;
 	struct dym_match *match;
 	int i;
+
+	setlocale(LC_ALL, "");
 
 	if (argc < 2) {
 		printf(USAGE_FMT, argv[0]);
@@ -109,7 +112,10 @@ int main(int argc, char *argv[])
 
 	input = argv[optind];
 	if (iflag) {
-		lowercase(input);
+		if (lowercase(input) != 0) {
+			printf("Could not format string as lowercase: %s\n", input);
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	if (fflag) {
