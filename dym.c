@@ -17,6 +17,7 @@ struct dym_match {
 };
 
 static void lowercase(char *str);
+static void help(const char *progname);
 
 int main(int argc, char *argv[])
 {
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "c:f:im:vV")) != -1) {
+	while ((opt = getopt(argc, argv, "c:f:him:vV")) != -1) {
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
@@ -58,6 +59,10 @@ int main(int argc, char *argv[])
 					perror(filename);
 					exit(EXIT_FAILURE);
 				}
+				break;
+			case 'h':
+				help(argv[0]);
+				exit(EXIT_SUCCESS);
 				break;
 			case 'i':
 				iflag = 1;
@@ -148,4 +153,17 @@ static void lowercase(char *str)
 	for (i = 0; i < len; i++) {
 		str[i] = tolower(str[i]);
 	}
+}
+
+static void help(const char *progname)
+{
+	printf(USAGE_FMT, progname);
+	printf("Options:\n");
+	printf("\t-c [COUNT] print up to COUNT closest matches\n");
+	printf("\t-f [FILE] read possible matches from file vs. stdin\n");
+	printf("\t-h show this help text\n");
+	printf("\t-i ignore case--i.e. enable case-insensitive mode\n");
+	printf("\t-m [MESSAGE] print MESSAGE before the match(es)\n");
+	printf("\t-v verbose mode, print edit distance of each closest match\n");
+	printf("\t-V print version number\n");
 }
