@@ -18,11 +18,18 @@ struct dym_match {
 
 static void lowercase(char *str);
 static void help(const char *progname);
+static char *next();
+
+int eflag = 0;
+const char *explicit_list = NULL;
+int fflag = 0;
+int iflag = 0;
+FILE *fp = NULL;
+char delim = ' ';
 
 int main(int argc, char *argv[])
 {
 	char line[LINE_BUFSIZE];
-	FILE *fp = stdin;
 	int dist;
 	char *input;
 	size_t line_len;
@@ -33,7 +40,6 @@ int main(int argc, char *argv[])
 	char *message = NULL;
 	int mflag = 0;
 	int vflag = 0;
-	int iflag = 0;
 	struct dym_match *closest = NULL;
 	int count = 1;
 	struct dym_match *match;
@@ -43,7 +49,8 @@ int main(int argc, char *argv[])
 		printf(USAGE_FMT, argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	while ((opt = getopt(argc, argv, "c:f:him:vV")) != -1) {
+	fp = stdin;
+	while ((opt = getopt(argc, argv, "c:e:f:F:him:vV")) != -1) {
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
@@ -52,13 +59,16 @@ int main(int argc, char *argv[])
 					exit(EXIT_FAILURE);
 				}
 				break;
+			case 'e':
+				eflag = 1;
+				explicit_list = optarg;
+				break;
 			case 'f':
+				fflag = 1;
 				filename = optarg;
-				fp = fopen(filename, "r");
-				if (fp == NULL) {
-					perror(filename);
-					exit(EXIT_FAILURE);
-				}
+				break;
+			case 'F':
+				delim = optarg[0];
 				break;
 			case 'h':
 				help(argv[0]);
@@ -84,6 +94,11 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	if (eflag && fflag) {
+		printf("Cannot pass explicit list and open file\n");
+		exit(EXIT_FAILURE);
+	}
+
 	closest = malloc(sizeof(struct dym_match) * count);
 	if (closest == NULL) {
 		perror("malloc");
@@ -99,13 +114,23 @@ int main(int argc, char *argv[])
 		lowercase(input);
 	}
 
-	while (fgets(line, LINE_BUFSIZE, fp) != NULL) {
+	if (fflag) {
+		fp = fopen(filename, "r");
+		if (fp == NULL) {
+			perror(filename);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	while (next(line) != NULL) {
 		line_len = strlen(line);
 		if (line_len == 0) {
 			/* Skip blank lines */
 			continue;
 		}
-		line[strlen(line)-1] = '\0';
+		if (line[line_len-1] == '\n') {
+			line[line_len-1] = '\0';
+		}
 		if (iflag) {
 			lowercase(line);
 		}
@@ -169,4 +194,24 @@ static void help(const char *progname)
 	printf("\t-m [MESSAGE] print MESSAGE before the match(es)\n");
 	printf("\t-v verbose mode, print edit distance of each closest match\n");
 	printf("\t-V print version number\n");
+}
+
+static char *next(char line[LINE_BUFSIZE])
+{
+	int ch;
+	int i = 0;
+	if (eflag) {
+		if (*explicit_list == '\0') {
+			return NULL;
+		}
+		while ((ch = *explicit_list++) != '\0' && ch != delim && i < LINE_BUFSIZE - 2) {
+			line[i++] = ch;
+		}
+		if (ch == '\0') {
+			explicit_list--;
+		}
+		line[i] = '\0';
+		return line;
+	}
+	return fgets(line, LINE_BUFSIZE, fp);
 }

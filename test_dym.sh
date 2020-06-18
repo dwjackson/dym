@@ -45,10 +45,22 @@ test_ignore_case() {
 	assert_eq "start 2" "$actual"
 }
 
+test_explicit_list() {
+	actual=`./dym -e 'stop start restart status' statr`
+	assert_eq "start" "$actual"
+}
+
+test_explicit_list_with_delim() {
+	actual=`./dym -F ',' -e 'stop,start,restart,status' statr`
+	assert_eq "start" "$actual"
+}
+
 test_basic
 test_file
 test_verbose
 test_multiple_matches
 test_everything
 test_ignore_case
+test_explicit_list
+test_explicit_list_with_delim
 echo 'All tests passed!'
