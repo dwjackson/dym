@@ -1,0 +1,76 @@
+.Dd June 18, 2020
+.Dt DYM 1
+.Os
+.Sh NAME
+.Nm dym
+.Nd did you mean..?
+.Sh SYNOPSIS
+.Nm
+.Op Fl c Ar count
+.Op Fl e Ar explicit_list
+.Op Fl F Ar delimiter
+.Op Fl f Ar filename
+.Op Fl h
+.Op Fl i
+.Op Fl m Ar message
+.Op Fl v
+.Op Fl V
+.Op Ar word 
+.Sh DESCRIPTION
+Determine the closest match for a particular
+.Ar word
+among a set of valid
+words/strings. Prints the closest matching string(s)s from within the set and
+exit 0. When multiple closest matches are desired and more than one string are
+the closest match, break the tie based on which word appeared first in the list
+of valid strings.
+.Pp
+The possible arguments are as follows:
+.Bl -tag -width Ds
+.It Fl c Ar count
+Find the closest
+.Ar count
+matches, defaults to 1
+.It Fl e Ar explicit_list
+Rather than reading the list of valid words from a file, pass it explicitly
+.It Fl F Ar delimiter
+Specify the delimiter for an
+.Ar explicit_list
+of words, defaults to ' ' (space)
+.It Fl f Ar filename
+Read the list of valid words from a file, rather than from stdin
+.It Fl h
+Print a help message
+.It Fl i
+Ignore case, e.g. consider
+.Qq abc
+an exact match of
+.Qq AbC
+.It Fl m Ar message
+Print
+.Ar message
+before printing the closest match(es)
+.It Fl v
+verbse mode, print the edit distance from
+.Ar word
+of the match(es)
+.It Fl V
+print the version number
+.It Ar word
+The string whose closest match to find within the set of valid strings
+.El
+.Sh EXIT STATUS
+The
+.Nm
+program exists 0 on success and not-zero if an error occurs.
+.Sh EXAMPLES
+To find the closest match...
+.Pp
+from an explicit list:
+.Dl $ dym -F ',' -e 'stop,start,status' 'statr'
+.Pp
+reading from a file:
+.Dl $ dym -f words 'statr'
+.Pp
+To find the closest 3 matches:
+.Dl $ dym -c 3 -f words 'statr'
