@@ -31,6 +31,26 @@ The `dym` command supports the following command line options:
 * `-V` print version information
 * `-h` print help
 
+## Examples
+
+To find the closest match...
+
+from an explicit list:
+```sh
+$ dym -F ',' -e 'stop,start,status' 'statr'
+```
+
+reading from a file:
+
+```sh
+$ dym -f words 'statr'
+```
+
+To find the closest 3 matches:
+```sh
+$ dym -c 3 -f words 'statr'
+```
+
 ## License
 
 DYM is licensed under the MIT license.
