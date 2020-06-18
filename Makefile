@@ -28,7 +28,7 @@ install: $(EXE_NAME) $(MAN_PAGE).gz
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
 	install $(EXE_NAME) $(DESTDIR)$(PREFIX)/bin
-	install $(MAN_PAGE).gz $(DESTSIR)$(PREFIX)/share/man/man1
+	install $(MAN_PAGE).gz $(DESTDIR)$(PREFIX)/share/man/man1
 
 uninstall:
 	rm $(DESTDIR)$(PREFIX)/bin/$(EXE_NAME)
