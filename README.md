@@ -4,8 +4,8 @@ DYM is a utility that does "fuzzy" string matching. Given a particular input
 string and set of valid possible strings, DYM will find the closest match(es).
 It can be used, for example, to suggest corrections for mistyped commands. It
 does this by computing the
-[edit distance](https://en.wikipedia.org/wiki/Edit_distance)--more specifically
-the [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance)
+[edit distance](https://en.wikipedia.org/wiki/Edit_distance), more specifically
+the [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance),
 of the input against each string in the valid set and finding the one with the
 smallest edit distance from the input string.
 
