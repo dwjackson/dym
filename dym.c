@@ -5,7 +5,7 @@
 #include <locale.h>
 #include "dym.h"
 
-#define VERSION "1.0.1"
+#define VERSION "1.0.2"
 
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
 #define LINE_BUFSIZE 100

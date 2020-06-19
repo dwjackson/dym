@@ -68,6 +68,12 @@ test_unicode() {
 	assert_eq "über 0" "$actual"
 }
 
+test_explicit_list_2() {
+	echo 'text_explicit_list_2'
+	actual=`./dym -e 'vpn disconnect rdp meeting standup' meetign`
+	assert_eq "meeting" "$actual"
+}
+
 test_basic
 test_file
 test_verbose
@@ -77,4 +83,5 @@ test_ignore_case
 test_explicit_list
 test_explicit_list_with_delim
 test_unicode
+test_explicit_list_2
 echo 'All tests passed!'

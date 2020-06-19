@@ -31,15 +31,18 @@ static int levenshtein(const char *s1, size_t l1, const char *s2, size_t l2)
 		return l1;
 	}
 
-	lev = malloc(lev_size * sizeof(int));
+	lev = calloc(lev_size, sizeof(int));
 	if (lev == NULL) {
 		return -1;
 	}
-	memset(lev, -1, lev_size * sizeof(int));
 
 	for (i = 0; i <= l1; i++) {
 		for (j = 0; j <= l2; j++) {
 			idx = levindex(i, j, l1);
+			if (idx >= lev_size) {
+				// TODO: Delete this
+				abort();
+			}
 			if (min(i, j) == 0) {
 				lev[idx] = max(i, j);
 			} else {
@@ -81,6 +84,6 @@ static int min3(int x, int y, int z)
 
 static size_t levindex(size_t i, size_t j, size_t l)
 {
-	size_t index = i * l + j;
+	size_t index = i + l * j;
 	return index;
 }
