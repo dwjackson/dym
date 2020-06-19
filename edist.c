@@ -40,7 +40,6 @@ static int levenshtein(const char *s1, size_t l1, const char *s2, size_t l2)
 		for (j = 0; j <= l2; j++) {
 			idx = levindex(i, j, l1);
 			if (idx >= lev_size) {
-				// TODO: Delete this
 				abort();
 			}
 			if (min(i, j) == 0) {
