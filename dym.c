@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	int opt;
 	extern int optind;
 	extern char *optarg;
-	char *filename;
+	char *filename = NULL;
 	char *message = NULL;
 	int mflag = 0;
 	int vflag = 0;
