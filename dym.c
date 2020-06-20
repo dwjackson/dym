@@ -5,7 +5,7 @@
 #include <locale.h>
 #include "dym.h"
 
-#define VERSION "1.0.2"
+#define VERSION "1.1.0"
 
 #define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
 #define LINE_BUFSIZE 100
@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	extern char *optarg;
 	char *filename = NULL;
 	char *message = NULL;
+	int dflag = 0;
 	int mflag = 0;
 	int vflag = 0;
 	struct dym_match *closest = NULL;
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	fp = stdin;
-	while ((opt = getopt(argc, argv, "c:e:f:F:him:vV")) != -1) {
+	while ((opt = getopt(argc, argv, "c:de:f:F:him:vV")) != -1) {
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
@@ -60,6 +61,9 @@ int main(int argc, char *argv[])
 					printf("count must be > 0 and < %d\n", COUNT_MAX + 1);
 					exit(EXIT_FAILURE);
 				}
+				break;
+			case 'd':
+				dflag = 1;
 				break;
 			case 'e':
 				eflag = 1;
@@ -98,6 +102,10 @@ int main(int argc, char *argv[])
 
 	if (eflag && fflag) {
 		printf("Cannot pass explicit list and open file\n");
+		exit(EXIT_FAILURE);
+	}
+	if (dflag && vflag) {
+		printf("Cannot mix the -d and -v flags as they conflict\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -166,9 +174,13 @@ int main(int argc, char *argv[])
 		if (mflag) {
 			printf("\t");
 		}
-		printf("%s", match->str);
-		if (vflag) {
-			printf(" %d", match->dist);
+		if (dflag) {
+			printf("%d", match->dist);
+		} else {
+			printf("%s", match->str);
+			if (vflag) {
+				printf(" %d", match->dist);
+			}
 		}
 		printf("\n");
 	}
@@ -184,6 +196,7 @@ static void help(const char *progname)
 	printf(USAGE_FMT, progname);
 	printf("Options:\n");
 	printf("\t-c [COUNT] print up to COUNT closest matches\n");
+	printf("\t-d print only the edit distance to closest match(es)\n");
 	printf("\t-f [FILE] read possible matches from file vs. stdin\n");
 	printf("\t-h show this help text\n");
 	printf("\t-i ignore case--i.e. enable case-insensitive mode\n");

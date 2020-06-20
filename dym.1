@@ -7,6 +7,7 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl c Ar count
+.Op Fl d
 .Op Fl e Ar explicit_list
 .Op Fl F Ar delimiter
 .Op Fl f Ar filename
@@ -31,6 +32,9 @@ The possible arguments are as follows:
 Find the closest
 .Ar count
 matches, defaults to 1
+.It Fl d
+Print only the edit distance to the closest match and not the closest match
+string itself
 .It Fl e Ar explicit_list
 Rather than reading the list of valid words from a file, pass it explicitly
 .It Fl F Ar delimiter
@@ -74,3 +78,6 @@ reading from a file:
 .Pp
 To find the closest 3 matches:
 .Dl $ dym -c 3 -f words 'statr'
+.Pp
+To find the edit distance between two strings:
+.Dl $ dym -d -e 'abc' 'abd'

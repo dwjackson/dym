@@ -13,4 +13,4 @@ then
 	exit 1
 fi
 
-dym -v -e "$1" "$2" | awk -e '{ print $2; }'
+dym -d -e "$1" "$2"

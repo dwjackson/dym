@@ -74,6 +74,12 @@ test_explicit_list_2() {
 	assert_eq "meeting" "$actual"
 }
 
+test_edit_distance() {
+	echo 'test_edit_distance'
+	actual=`./dym -d -e 'abc' 'ade'`
+	assert_eq "2" "$actual"
+}
+
 test_basic
 test_file
 test_verbose
@@ -84,4 +90,5 @@ test_explicit_list
 test_explicit_list_with_delim
 test_unicode
 test_explicit_list_2
+test_edit_distance
 echo 'All tests passed!'
