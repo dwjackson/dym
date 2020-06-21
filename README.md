@@ -29,7 +29,7 @@ By default, `dym` will print the closest match in response.
 The `dym` command supports the following command line options:
 
 * `-c [COUNT]` return up to COUNT closest matches, ties printed alphabetically
-* `-D` use the [Damerau-Levenshtein](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance)
+* `-D` use the [Damerau-Levenshtein](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance) distance algorithm
 * `-d` print only the edit distance between the input and the closest match(es)
 * `-e [EXPLICIT_LIST]` pass an explicit list of valid words, space-delimited by default
 * `-f [FILENAME]` read the list of possible matches from a file
