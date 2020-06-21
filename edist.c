@@ -109,8 +109,8 @@ static int damerau_levenshtein(const char *s1, size_t l1, const char *s2, size_t
 	for (i = 0; i <= l1; i++) {
 		for (j = 0; j <= l2; j++) {
 			idx = index2d(i, j, l1);
-			if (i == 0 && j == 0) {
-				dist = 0;
+			if (min(i, j) == 0) {
+				dist = max(i, j);
 			} else {
 				del_a_b = d[index2d(i-1,j,l1)] + 1;
 				ins_a_b = d[index2d(i,j-1,l1)] + 1;
@@ -136,3 +136,4 @@ static int damerau_levenshtein(const char *s1, size_t l1, const char *s2, size_t
 
 	return distance;
 }
+

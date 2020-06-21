@@ -43,6 +43,9 @@ ASTRO_TEST_BEGIN(test_complex_strings_2)
 {
 	int dist = dym_edist("Saturday", "Sunday");
 	assert_int_eq(3, dist, "Strings should have distance 3");
+
+	dist = dym_edist("outset", "tset");
+	assert_int_eq(2, dist, "Strings should have distance 2");
 }
 ASTRO_TEST_END
 
@@ -64,6 +67,8 @@ ASTRO_TEST_BEGIN(test_damerau_levenshtein)
 	dist = dym_dl_edist("tts", "te");
 	assert_int_eq(2, dist, "Strings should have distance 2");
 	dist = dym_dl_edist("ttst", "tet");
+	assert_int_eq(2, dist, "Strings should have distance 2");
+	dist = dym_dl_edist("outset", "tset");
 	assert_int_eq(2, dist, "Strings should have distance 2");
 
 	/* Swap tests */
