@@ -3,7 +3,7 @@ SRC_FILES = dym.c edist.c lowercase.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 MAN_PAGE = dym.1
 CC = cc
-CFLAGS = -g -O2 -Wall -Wextra -pedantic
+CFLAGS = -O2 -Wall -Wextra -pedantic
 PREFIX=/usr/local
 
 all: $(EXE_NAME)
