@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 	char *filename = NULL;
 	char *message = NULL;
 	int dflag = 0;
+	int Dflag = 0;
 	int mflag = 0;
 	int vflag = 0;
 	struct dym_match *closest = NULL;
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	fp = stdin;
-	while ((opt = getopt(argc, argv, "c:de:f:F:him:vV")) != -1) {
+	while ((opt = getopt(argc, argv, "c:Dde:f:F:him:vV")) != -1) {
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
@@ -64,6 +65,9 @@ int main(int argc, char *argv[])
 				break;
 			case 'd':
 				dflag = 1;
+				break;
+			case 'D':
+				Dflag = 1;
 				break;
 			case 'e':
 				eflag = 1;
@@ -147,7 +151,11 @@ int main(int argc, char *argv[])
 		if (iflag) {
 			lowercase(line);
 		}
-		dist = dym_edist(input, line);
+		if (Dflag) {
+			dist = dym_dl_edist(input, line);
+		} else {
+			dist = dym_edist(input, line);
+		}
 
 		for (i = 0; i < count; i++) {
 			match = &closest[i];

@@ -7,6 +7,7 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl c Ar count
+.Op Fl D
 .Op Fl d
 .Op Fl e Ar explicit_list
 .Op Fl F Ar delimiter
@@ -32,6 +33,8 @@ The possible arguments are as follows:
 Find the closest
 .Ar count
 matches, defaults to 1
+.It Fl D
+Use the Damerau-Levenshtein distance, rather than the Levenshtein distance
 .It Fl d
 Print only the edit distance to the closest match and not the closest match
 string itself
@@ -81,3 +84,7 @@ To find the closest 3 matches:
 .Pp
 To find the edit distance between two strings:
 .Dl $ dym -d -e 'abc' 'abd'
+.Pp
+To use the Damerau-Levenshtein distance:
+.Dl $ dym -D -e -v 'test' tset
+.Dl test 1

@@ -7,7 +7,8 @@ static int indicator(char a, char b);
 static int max(int x, int y);
 static int min(int x, int y);
 static int min3(int x, int y, int z);
-static size_t levindex(size_t i, size_t j, size_t l);
+static size_t index2d(size_t i, size_t j, size_t l);
+static int damerau_levenshtein(const char *s1, size_t l1, const char *s2, size_t l2);
 
 int dym_edist(const char *s1, const char *s2)
 {
@@ -38,23 +39,20 @@ static int levenshtein(const char *s1, size_t l1, const char *s2, size_t l2)
 
 	for (i = 0; i <= l1; i++) {
 		for (j = 0; j <= l2; j++) {
-			idx = levindex(i, j, l1);
-			if (idx >= lev_size) {
-				abort();
-			}
+			idx = index2d(i, j, l1);
 			if (min(i, j) == 0) {
 				lev[idx] = max(i, j);
 			} else {
 				lev[idx] = min3(
-					lev[levindex(i-1,j,l1)]+1,
-					lev[levindex(i,j-1,l1)]+1,
-					lev[levindex(i-1,j-1,l1)] 
+					lev[index2d(i-1,j,l1)]+1,
+					lev[index2d(i,j-1,l1)]+1,
+					lev[index2d(i-1,j-1,l1)] 
 						+ indicator(s1[i-1], s2[j-1]));
 			}
 		}
 	}
 
-	distance = lev[levindex(l1, l2, l1)];
+	distance = lev[index2d(l1, l2, l1)];
 
 	free(lev);
 
@@ -81,8 +79,60 @@ static int min3(int x, int y, int z)
 	return min(x, min(y, z));
 }
 
-static size_t levindex(size_t i, size_t j, size_t l)
+static size_t index2d(size_t i, size_t j, size_t l)
 {
 	size_t index = i + l * j;
 	return index;
+}
+
+int dym_dl_edist(const char *s1, const char *s2)
+{
+	size_t l1 = strlen(s1);
+	size_t l2 = strlen(s2);
+	return damerau_levenshtein(s1, l1, s2, l2);
+}
+
+static int damerau_levenshtein(const char *s1, size_t l1, const char *s2, size_t l2)
+{
+	int dist;
+	size_t i, j;
+	size_t idx;
+	size_t size = (l1 + 1) * (l2 + 1);
+	int *d = calloc(size, sizeof(int));
+
+	int distance;
+	int del_a_b;
+	int ins_a_b;
+	int mismatch;
+	int swap;
+
+	for (i = 0; i <= l1; i++) {
+		for (j = 0; j <= l2; j++) {
+			idx = index2d(i, j, l1);
+			if (i == 0 && j == 0) {
+				dist = 0;
+			} else {
+				del_a_b = d[index2d(i-1,j,l1)] + 1;
+				ins_a_b = d[index2d(i,j-1,l1)] + 1;
+				mismatch = d[index2d(i-1,j-1,l1)]
+					+ indicator(s1[i-1], s2[j-1]);
+				dist = min3(del_a_b, ins_a_b, mismatch);
+
+				if (i > 1 && j > 1
+					&& s1[i-1] == s2[j-2]
+					&& s1[i-2] == s2[j-1]) {
+
+					swap = d[index2d(i-2,j-2,l1)] + 1;
+					dist = min(dist, swap);
+				}
+			}
+			d[idx] = dist;
+		}
+	}
+
+	distance = d[index2d(l1, l2, l1)];
+
+	free(d);
+
+	return distance;
 }

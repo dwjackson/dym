@@ -46,6 +46,32 @@ ASTRO_TEST_BEGIN(test_complex_strings_2)
 }
 ASTRO_TEST_END
 
+ASTRO_TEST_BEGIN(test_damerau_levenshtein)
+{
+	int dist;
+	dist = dym_edist("tset", "test");
+	assert_int_eq(2, dist, "Strings should have distance 2");
+
+	/* Basic tests */
+	dist = dym_dl_edist("", "");
+	assert_int_eq(0, dist, "Empty strings should have distance 0");
+	dist = dym_dl_edist("t", "t");
+	assert_int_eq(0, dist, "Strings should have distance 0");
+	dist = dym_dl_edist("t", "te");
+	assert_int_eq(1, dist, "Strings should have distance 1: add/delete");
+	dist = dym_dl_edist("tt", "te");
+	assert_int_eq(1, dist, "Strings should have distance 1: substitute");
+	dist = dym_dl_edist("tts", "te");
+	assert_int_eq(2, dist, "Strings should have distance 2");
+	dist = dym_dl_edist("ttst", "tet");
+	assert_int_eq(2, dist, "Strings should have distance 2");
+
+	/* Swap tests */
+	dist = dym_dl_edist("tset", "test");
+	assert_int_eq(1, dist, "Strings should have distance 1: swap");
+}
+ASTRO_TEST_END
+
 int main()
 {
 	int num_failures = 0;
@@ -56,6 +82,7 @@ int main()
 	astro_suite_add_test(suite, test_single_addition, NULL);
 	astro_suite_add_test(suite, test_complex_strings, NULL);
 	astro_suite_add_test(suite, test_complex_strings_2, NULL);
+	astro_suite_add_test(suite, test_damerau_levenshtein, NULL);
 	num_failures = astro_suite_run(suite);
 	astro_suite_destroy(suite);
 	return num_failures == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
