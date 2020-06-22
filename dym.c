@@ -5,7 +5,7 @@
 #include <locale.h>
 #include "dym.h"
 
-#define VERSION "1.2.0"
+#define VERSION "1.2.1"
 
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
@@ -201,10 +201,14 @@ int main(int argc, char *argv[])
 
 static void help(const char *progname)
 {
+
 	usage(progname);
 	printf("Options:\n");
 	printf("\t-c [COUNT] print up to COUNT closest matches\n");
+	printf("\t-D use the Damerau-Levenshtein distance\n");
 	printf("\t-d print only the edit distance to closest match(es)\n");
+	printf("\t-e [EXPLICIT_LIST] pass valid word list explicitly\n");
+	printf("\t-F [DELIM] set the explicit list delimiter (default is space)\n");
 	printf("\t-f [FILE] read possible matches from file vs. stdin\n");
 	printf("\t-h show this help text\n");
 	printf("\t-i ignore case--i.e. enable case-insensitive mode\n");
