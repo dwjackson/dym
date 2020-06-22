@@ -7,7 +7,6 @@
 
 #define VERSION "1.2.0"
 
-#define USAGE_FMT "USAGE: %s [ARGS...] [STRING]\n"
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
 #define COUNT_MAX 1000
@@ -17,6 +16,7 @@ struct dym_match {
 	char str[LINE_BUFSIZE];
 };
 
+static void usage(const char *progname);
 static void help(const char *progname);
 static char *next();
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	setlocale(LC_ALL, "");
 
 	if (argc < 2) {
-		printf(USAGE_FMT, argv[0]);
+		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	fp = stdin;
@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 
 static void help(const char *progname)
 {
-	printf(USAGE_FMT, progname);
+	usage(progname);
 	printf("Options:\n");
 	printf("\t-c [COUNT] print up to COUNT closest matches\n");
 	printf("\t-d print only the edit distance to closest match(es)\n");
@@ -231,4 +231,10 @@ static char *next(char line[LINE_BUFSIZE])
 		return line;
 	}
 	return fgets(line, LINE_BUFSIZE, fp);
+}
+
+static void usage(const char *progname)
+{
+	printf("USAGE: %s [ARGS...] [STRING]\n", progname);
+	printf("To see all options: %s -h\n", progname);
 }
