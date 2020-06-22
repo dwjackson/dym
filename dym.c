@@ -5,7 +5,7 @@
 #include <locale.h>
 #include "dym.h"
 
-#define VERSION "1.2.1"
+#define VERSION "1.2.2"
 
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 	int Dflag = 0;
 	int mflag = 0;
 	int vflag = 0;
+	int Fflag = 0;
 	struct dym_match *closest = NULL;
 	int count = 1;
 	struct dym_match *match;
@@ -83,6 +84,7 @@ int main(int argc, char *argv[])
 					exit(EXIT_FAILURE);
 				}
 				delim = optarg[0];
+				Fflag = 1;
 				break;
 			case 'h':
 				help(argv[0]);
@@ -114,6 +116,10 @@ int main(int argc, char *argv[])
 	}
 	if (dflag && vflag) {
 		printf("Cannot mix the -d and -v flags as they conflict\n");
+		exit(EXIT_FAILURE);
+	}
+	if (Fflag && !eflag) {
+		printf("Cannot use custom delimiter without explicit list\n");
 		exit(EXIT_FAILURE);
 	}
 
