@@ -78,6 +78,10 @@ int main(int argc, char *argv[])
 				filename = optarg;
 				break;
 			case 'F':
+				if (strlen(optarg) != 1) {
+					printf("Delimiter must be 1 char\n");
+					exit(EXIT_FAILURE);
+				}
 				delim = optarg[0];
 				break;
 			case 'h':
