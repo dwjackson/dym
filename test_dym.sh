@@ -74,6 +74,12 @@ test_explicit_list_2() {
 	assert_eq "meeting" "$actual"
 }
 
+test_explicit_list_with_preceding_and_trailing_spaces() {
+	echo 'text_explicit_list_with_trailing_spaces'
+	actual=`./dym -e '  vpn disconnect rdp meeting standup   ' meetign`
+	assert_eq "meeting" "$actual"
+}
+
 test_edit_distance() {
 	echo 'test_edit_distance'
 	actual=`./dym -d -e 'abc' 'ade'`
@@ -91,4 +97,5 @@ test_explicit_list_with_delim
 test_unicode
 test_explicit_list_2
 test_edit_distance
+test_explicit_list_with_preceding_and_trailing_spaces
 echo 'All tests passed!'
