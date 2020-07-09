@@ -1,4 +1,5 @@
 #include "dym.h"
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,8 +7,6 @@
 #include <locale.h>
 #include <stdarg.h>
 #include <errno.h>
-
-#define VERSION "1.2.2"
 
 #define LINE_BUFSIZE 100
 #define UNSET_DISTANCE -1
