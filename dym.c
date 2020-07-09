@@ -1,9 +1,11 @@
+#include "dym.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
-#include "dym.h"
+#include <stdarg.h>
+#include <errno.h>
 
 #define VERSION "1.2.2"
 
@@ -19,6 +21,7 @@ struct dym_match {
 static void usage(const char *progname);
 static void help(const char *progname);
 static char *next();
+static void fatal(const char *fmt, ...);
 
 int eflag = 0;
 const char *explicit_list = NULL;
@@ -60,8 +63,7 @@ int main(int argc, char *argv[])
 			case 'c':
 				count = atoi(optarg);
 				if (count == 0 || count > COUNT_MAX) {
-					printf("count must be > 0 and < %d\n", COUNT_MAX + 1);
-					exit(EXIT_FAILURE);
+					fatal("count must be between 1 and %d", COUNT_MAX);
 				}
 				break;
 			case 'd':
@@ -80,8 +82,7 @@ int main(int argc, char *argv[])
 				break;
 			case 'F':
 				if (strlen(optarg) != 1) {
-					printf("Delimiter must be 1 char\n");
-					exit(EXIT_FAILURE);
+					fatal("Delimiter must be 1 char");
 				}
 				delim = optarg[0];
 				Fflag = 1;
@@ -111,22 +112,18 @@ int main(int argc, char *argv[])
 	}
 
 	if (eflag && fflag) {
-		printf("Cannot pass explicit list and open file\n");
-		exit(EXIT_FAILURE);
+		fatal("Cannot pass explicit list and open file");
 	}
 	if (dflag && vflag) {
-		printf("Cannot mix the -d and -v flags as they conflict\n");
-		exit(EXIT_FAILURE);
+		fatal("Cannot mix the -d and -v flags as they conflict");
 	}
 	if (Fflag && !eflag) {
-		printf("Cannot use custom delimiter without explicit list\n");
-		exit(EXIT_FAILURE);
+		fatal("Cannot use custom delimiter without explicit list");
 	}
 
 	closest = malloc(sizeof(struct dym_match) * count);
 	if (closest == NULL) {
-		perror("malloc");
-		exit(EXIT_FAILURE);
+		fatal("malloc");
 	}
 	for (i = 0; i < count; i++) {
 		closest[i].dist = UNSET_DISTANCE;
@@ -136,16 +133,14 @@ int main(int argc, char *argv[])
 	input = argv[optind];
 	if (iflag) {
 		if (lowercase(input) != 0) {
-			printf("Could not format string as lowercase: %s\n", input);
-			exit(EXIT_FAILURE);
+			fatal("Could not format string as lowercase: %s", input);
 		}
 	}
 
 	if (fflag) {
 		fp = fopen(filename, "r");
 		if (fp == NULL) {
-			perror(filename);
-			exit(EXIT_FAILURE);
+			fatal(filename);
 		}
 	}
 
@@ -251,4 +246,20 @@ static void usage(const char *progname)
 {
 	printf("USAGE: %s [ARGS...] [STRING]\n", progname);
 	printf("To see all options: %s -h\n", progname);
+}
+
+static void fatal(const char *fmt, ...)
+{
+	va_list ap;
+
+	if (errno != 0) {
+		perror(fmt);
+	} else {
+		va_start(ap, fmt);
+		printf("ERROR: ");
+		vprintf(fmt, ap);
+		printf("\n");
+	}
+
+	exit(EXIT_FAILURE);
 }
