@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 				vflag = 1;
 				break;
 			case 'V':
-				printf("%s version %s\n", argv[0], VERSION);
+				printf("%s version %s\n", argv[0], DYM_VERSION);
 				exit(EXIT_SUCCESS);
 				break;
 			default:
