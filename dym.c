@@ -112,13 +112,13 @@ int main(int argc, char *argv[])
 	}
 
 	if (eflag && fflag) {
-		fatal("Cannot pass explicit list and open file");
+		fatal("Cannot use both explicit list and file name");
 	}
 	if (dflag && vflag) {
-		fatal("Cannot mix the -d and -v flags as they conflict");
+		fatal("Cannot mix the -d and -v flags because they conflict");
 	}
 	if (Fflag && !eflag) {
-		fatal("Cannot use custom delimiter without explicit list");
+		fatal("Cannot use custom delimiter without an explicit list");
 	}
 
 	closest = malloc(sizeof(struct dym_match) * count);
