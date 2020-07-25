@@ -1,24 +1,30 @@
 EXE_NAME = dym
+MAN_PAGE = dym.1
 SRC_FILES = dym.c edist.c lowercase.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
-MAN_PAGE = dym.1
 CC = cc
 CFLAGS = -O2 -Wall -Wextra -pedantic
 PREFIX=/usr/local
 
 all: $(EXE_NAME)
 
-$(EXE_NAME): $(OBJ_FILES)
-	$(CC) $(CFLAGS) -o $(EXE_NAME) $(OBJ_FILES)
+$(EXE_NAME): dym.o edist.o lowercase.o
+	$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) 
 
-$(OBJ_FILES): $(SRC_FILES)
-	$(CC) $(CFLAGS) -c $(SRC_FILES)
+dym.o: dym.c dym.h config.h
+	$(CC) $(CFLAGS) -c $<
+
+edist.o: edist.c dym.h
+	$(CC) $(CFLAGS) -c $<
+
+lowercase.o: lowercase.c
+	$(CC) $(CFLAGS) -c $<
 
 check: test_edist $(EXE_NAME)
 	./test_edist
 	./test_dym.sh
 
-test_edist: test_edist.c edist.c
+test_edist: test_edist.c edist.c dym.h
 	$(CC) $(CFLAGS) -o test_edist test_edist.c edist.c -lastrounit
 
 $(MAN_PAGE).gz: $(MAN_PAGE)
