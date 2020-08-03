@@ -19,7 +19,7 @@ struct dym_match {
 
 static void usage(const char *progname);
 static void help(const char *progname);
-static char *next();
+static size_t next();
 static void fatal(const char *fmt, ...);
 
 int eflag = 0;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	while (next(line) != NULL) {
+	while (next(line) != 0) {
 		line_len = strlen(line);
 		if (line_len == 0) {
 			/* Skip blank lines */
@@ -220,13 +220,13 @@ static void help(const char *progname)
 	printf("\t-V print version number\n");
 }
 
-static char *next(char line[LINE_BUFSIZE])
+static size_t next(char line[LINE_BUFSIZE])
 {
 	int ch;
-	int i = 0;
+	size_t i = 0;
 	if (eflag) {
 		if (*explicit_list == '\0') {
-			return NULL;
+			return 0;
 		}
 		while ((ch = *explicit_list++) != '\0' && ch != delim && i < LINE_BUFSIZE - 2) {
 			line[i++] = ch;
@@ -235,9 +235,12 @@ static char *next(char line[LINE_BUFSIZE])
 			explicit_list--;
 		}
 		line[i] = '\0';
-		return line;
+		return i-1;
 	}
-	return fgets(line, LINE_BUFSIZE, fp);
+	if (fgets(line, LINE_BUFSIZE, fp) == NULL) {
+		return 0;
+	}
+	return strlen(line);
 }
 
 static void usage(const char *progname)
