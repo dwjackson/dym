@@ -1,4 +1,5 @@
 EXE_NAME = dym
+LIB_NAME = lib$(EXE_NAME)
 MAN_PAGE = dym.1
 SRC_FILES = dym.c edist.c lowercase.c closest.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
@@ -8,8 +9,11 @@ PREFIX=/usr/local
 
 all: $(EXE_NAME)
 
-$(EXE_NAME): dym.o edist.o lowercase.o closest.o
-	$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) 
+$(EXE_NAME): dym.o lowercase.o $(LIB_NAME).a
+	$(CC) -L. $(CFLAGS) -o $@ $(OBJ_FILES) -ldym
+
+$(LIB_NAME).a: edist.o closest.o
+	ar rcs $(LIB_NAME).a edist.o closest.o
 
 closest.o: closest.c dym.h
 	$(CC) $(CFLAGS) -c $<
@@ -48,5 +52,6 @@ clean:
 	rm -f test_edist
 	rm -f *.o
 	rm -f $(MAN_PAGE).gz
+	rm -f *.a
 
 .PHONY: all clean test install uninstall
