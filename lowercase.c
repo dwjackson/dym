@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <wctype.h>
+#include "lowercase.h"
 
 int lowercase(char *str)
 {

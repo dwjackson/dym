@@ -11,13 +11,13 @@ all: $(EXE_NAME)
 $(EXE_NAME): dym.o edist.o lowercase.o
 	$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) 
 
-dym.o: dym.c dym.h config.h
+dym.o: dym.c dym.h config.h lowercase.h
 	$(CC) $(CFLAGS) -c $<
 
 edist.o: edist.c dym.h
 	$(CC) $(CFLAGS) -c $<
 
-lowercase.o: lowercase.c
+lowercase.o: lowercase.c lowercase.h
 	$(CC) $(CFLAGS) -c $<
 
 check: test_edist $(EXE_NAME)

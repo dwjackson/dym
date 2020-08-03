@@ -1,5 +1,6 @@
 #include "dym.h"
 #include "config.h"
+#include "lowercase.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

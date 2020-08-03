@@ -1,6 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define DYM_VERSION "1.2.2"
+#define DYM_VERSION "2.0.0"
 
 #endif /* CONFIG_H */
