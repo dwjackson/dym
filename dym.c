@@ -120,13 +120,12 @@ int main(int argc, char *argv[])
 		fatal("Cannot use custom delimiter without an explicit list");
 	}
 
-	closest = malloc(sizeof(struct dym_match) * count);
+	closest = calloc(count, sizeof(struct dym_match));
 	if (closest == NULL) {
-		fatal("malloc");
+		fatal("calloc");
 	}
 	for (i = 0; i < count; i++) {
 		closest[i].dist = UNSET_DISTANCE;
-		memset(closest[i].str, 0, LINE_BUFSIZE);
 	}
 
 	input = argv[optind];

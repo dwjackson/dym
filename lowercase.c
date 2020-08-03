@@ -14,7 +14,7 @@ int lowercase(char *str)
 	if (wstr_size == (size_t) -1) {
 		return -1;
 	}
-	wstr = malloc(sizeof(wchar_t) * (wstr_size + 1));
+	wstr = calloc(wstr_size + 1, sizeof(wchar_t));
 	if (wstr == NULL) {
 		return -1;
 	}
