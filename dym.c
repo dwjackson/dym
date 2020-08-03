@@ -142,8 +142,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	while (next(line) != 0) {
-		line_len = strlen(line);
+	while ((line_len = next(line)) != 0) {
 		if (line_len == 0) {
 			/* Skip blank lines */
 			continue;
