@@ -40,12 +40,18 @@ $(MAN_PAGE).gz: $(MAN_PAGE)
 install: $(EXE_NAME) $(MAN_PAGE).gz
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man1
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	mkdir -p $(DESTDIR)$(PREFIX)/include
 	install $(EXE_NAME) $(DESTDIR)$(PREFIX)/bin
 	install $(MAN_PAGE).gz $(DESTDIR)$(PREFIX)/share/man/man1
+	install $(LIB_NAME).a $(DESTDIR)$(PREFIX)/lib
+	install dym.h $(DESTDIR)$(PREFIX)/include
 
 uninstall:
 	rm $(DESTDIR)$(PREFIX)/bin/$(EXE_NAME)
-	rm $(DESTSIR)$(PREFIX)/share/man/man1/$(MAN_PAGE).gz
+	rm $(DESTDIR)$(PREFIX)/share/man/man1/$(MAN_PAGE).gz
+	rm $(DESTDIR)$(PREFIX)/lib/$(LIB_NAME).a
+	rm $(DESTDIR)$(PREFIX)/include/dym.h
 
 clean:
 	rm -f $(EXE_NAME)
