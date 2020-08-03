@@ -23,6 +23,7 @@ static void help(const char *progname);
 static size_t next();
 static void fatal(const char *fmt, ...);
 
+static struct dym_ops ops = { 0 };
 int eflag = 0;
 const char *explicit_list = NULL;
 int fflag = 0;
@@ -121,6 +122,12 @@ int main(int argc, char *argv[])
 		fatal("Cannot use custom delimiter without an explicit list");
 	}
 
+	if (Dflag) {
+		ops.edist = dym_dl_edist;
+	} else {
+		ops.edist = dym_edist;
+	}
+
 	closest = calloc(count, sizeof(struct dym_match));
 	if (closest == NULL) {
 		fatal("calloc");
@@ -154,11 +161,7 @@ int main(int argc, char *argv[])
 		if (iflag) {
 			lowercase(line);
 		}
-		if (Dflag) {
-			dist = dym_dl_edist(input, line);
-		} else {
-			dist = dym_edist(input, line);
-		}
+		dist = ops.edist(input, line);
 
 		for (i = 0; i < count; i++) {
 			match = &closest[i];
