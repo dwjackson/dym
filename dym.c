@@ -18,6 +18,7 @@ static void fatal(const char *fmt, ...);
 
 static struct dym_ops ops = { 0 };
 int eflag = 0;
+int iflag = 0;
 const char *explicit_list = NULL;
 int fflag = 0;
 FILE *fp = NULL;
@@ -33,7 +34,6 @@ int main(int argc, char *argv[])
 	char *message = NULL;
 	int dflag = 0;
 	int Dflag = 0;
-	int iflag = 0;
 	int mflag = 0;
 	int vflag = 0;
 	int Fflag = 0;
@@ -126,7 +126,6 @@ int main(int argc, char *argv[])
 		if (lowercase(input) != 0) {
 			fatal("Could not format string as lowercase: %s", input);
 		}
-		ops.flags |= DYM_FLAG_CASE_INSENSITIVE;
 	}
 
 	if (fflag) {
@@ -202,10 +201,16 @@ static size_t next(char line[DYM_LINE_BUFSIZE])
 			explicit_list--;
 		}
 		line[i] = '\0';
+		if (iflag) {
+			lowercase(line);
+		}
 		return i-1;
 	}
 	if (fgets(line, DYM_LINE_BUFSIZE, fp) == NULL) {
 		return 0;
+	}
+	if (iflag) {
+		lowercase(line);
 	}
 	return strlen(line);
 }

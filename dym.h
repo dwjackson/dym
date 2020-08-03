@@ -5,10 +5,7 @@
 
 #define DYM_LINE_BUFSIZE 100
 
-#define DYM_FLAG_CASE_INSENSITIVE 0x1
-
 struct dym_ops {
-	unsigned int flags;
 	size_t (*next)(char line[DYM_LINE_BUFSIZE]);
 	int (*edist)(const char *s1, const char *s2);
 };

@@ -26,9 +26,6 @@ int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closes
 		if (line[line_len-1] == '\n') {
 			line[line_len-1] = '\0';
 		}
-		if (ops->flags & DYM_FLAG_CASE_INSENSITIVE) {
-			lowercase(line);
-		}
 		dist = ops->edist(input, line);
 
 		for (i = 0; i < count; i++) {
