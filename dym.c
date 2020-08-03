@@ -22,6 +22,7 @@ static void usage(const char *progname);
 static void help(const char *progname);
 static size_t next();
 static void fatal(const char *fmt, ...);
+static int find_closest(const char *input, struct dym_match *closest, int count);
 
 static struct dym_ops ops = { 0 };
 int eflag = 0;
@@ -33,10 +34,7 @@ char delim = ' ';
 
 int main(int argc, char *argv[])
 {
-	char line[LINE_BUFSIZE];
-	int dist;
 	char *input;
-	size_t line_len;
 	int opt;
 	extern int optind;
 	extern char *optarg;
@@ -51,6 +49,7 @@ int main(int argc, char *argv[])
 	int count = 1;
 	struct dym_match *match;
 	int i;
+	int closest_found;
 
 	setlocale(LC_ALL, "");
 
@@ -128,14 +127,6 @@ int main(int argc, char *argv[])
 		ops.edist = dym_edist;
 	}
 
-	closest = calloc(count, sizeof(struct dym_match));
-	if (closest == NULL) {
-		fatal("calloc");
-	}
-	for (i = 0; i < count; i++) {
-		closest[i].dist = UNSET_DISTANCE;
-	}
-
 	input = argv[optind];
 	if (iflag) {
 		if (lowercase(input) != 0) {
@@ -150,37 +141,17 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	while ((line_len = next(line)) != 0) {
-		if (line_len == 0) {
-			/* Skip blank lines */
-			continue;
-		}
-		if (line[line_len-1] == '\n') {
-			line[line_len-1] = '\0';
-		}
-		if (iflag) {
-			lowercase(line);
-		}
-		dist = ops.edist(input, line);
-
-		for (i = 0; i < count; i++) {
-			match = &closest[i];
-			if (match->dist == UNSET_DISTANCE || dist < match->dist) {
-				if (i + 1 < count) {
-					/* Shift things down, lowest dist is always first */
-					memmove(&closest[i+1], &closest[i], sizeof(struct dym_match) * (count - i - 1));
-				}
-				match->dist = dist;
-				strcpy(match->str, line);
-				break;
-			}
-		}
+	closest = calloc(count, sizeof(struct dym_match));
+	if (closest == NULL) {
+		fatal("calloc");
 	}
+
+	closest_found = find_closest(input, closest, count);
 
 	if (mflag) {
 		printf("%s\n", message);
 	}
-	for (i = 0; i < count; i++) {
+	for (i = 0; i < closest_found; i++) {
 		match = &closest[i];
 		if (match->dist == UNSET_DISTANCE) {
 			break;
@@ -266,4 +237,50 @@ static void fatal(const char *fmt, ...)
 	}
 
 	exit(EXIT_FAILURE);
+}
+
+static int find_closest(const char *input, struct dym_match *closest, int count)
+{
+	int i;
+	char line[LINE_BUFSIZE];
+	size_t line_len;
+	int dist;
+	struct dym_match *match;
+	int found = 0;
+
+	for (i = 0; i < count; i++) {
+		closest[i].dist = UNSET_DISTANCE;
+	}
+
+	while ((line_len = next(line)) != 0) {
+		if (line_len == 0) {
+			/* Skip blank lines */
+			continue;
+		}
+		if (line[line_len-1] == '\n') {
+			line[line_len-1] = '\0';
+		}
+		if (iflag) {
+			lowercase(line);
+		}
+		dist = ops.edist(input, line);
+
+		for (i = 0; i < count; i++) {
+			match = &closest[i];
+			if (match->dist == UNSET_DISTANCE || dist < match->dist) {
+				if (match->dist == UNSET_DISTANCE) {
+					found++;
+				}
+				if (i + 1 < count) {
+					/* Shift things down, lowest dist is always first */
+					memmove(&closest[i+1], &closest[i], sizeof(struct dym_match) * (count - i - 1));
+				}
+				match->dist = dist;
+				strcpy(match->str, line);
+				break;
+			}
+		}
+	}
+
+	return found;
 }
