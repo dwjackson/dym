@@ -9,26 +9,17 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#define LINE_BUFSIZE 100
-#define UNSET_DISTANCE -1
 #define COUNT_MAX 1000
-
-struct dym_match {
-	int dist;
-	char str[LINE_BUFSIZE];
-};
 
 static void usage(const char *progname);
 static void help(const char *progname);
 static size_t next();
 static void fatal(const char *fmt, ...);
-static int find_closest(const char *input, struct dym_match *closest, int count);
 
 static struct dym_ops ops = { 0 };
 int eflag = 0;
 const char *explicit_list = NULL;
 int fflag = 0;
-int iflag = 0;
 FILE *fp = NULL;
 char delim = ' ';
 
@@ -42,6 +33,7 @@ int main(int argc, char *argv[])
 	char *message = NULL;
 	int dflag = 0;
 	int Dflag = 0;
+	int iflag = 0;
 	int mflag = 0;
 	int vflag = 0;
 	int Fflag = 0;
@@ -121,6 +113,8 @@ int main(int argc, char *argv[])
 		fatal("Cannot use custom delimiter without an explicit list");
 	}
 
+	ops.next = next;
+
 	if (Dflag) {
 		ops.edist = dym_dl_edist;
 	} else {
@@ -132,6 +126,7 @@ int main(int argc, char *argv[])
 		if (lowercase(input) != 0) {
 			fatal("Could not format string as lowercase: %s", input);
 		}
+		ops.flags |= DYM_FLAG_CASE_INSENSITIVE;
 	}
 
 	if (fflag) {
@@ -141,21 +136,19 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	/* Find the closest "count" matches */
 	closest = calloc(count, sizeof(struct dym_match));
 	if (closest == NULL) {
 		fatal("calloc");
 	}
+	closest_found = dym_closest(&ops, input, closest, count);
 
-	closest_found = find_closest(input, closest, count);
-
+	/* Print out the closest matches, one per line */
 	if (mflag) {
 		printf("%s\n", message);
 	}
 	for (i = 0; i < closest_found; i++) {
 		match = &closest[i];
-		if (match->dist == UNSET_DISTANCE) {
-			break;
-		}
 		if (mflag) {
 			printf("\t");
 		}
@@ -194,7 +187,7 @@ static void help(const char *progname)
 	printf("\t-V print version number\n");
 }
 
-static size_t next(char line[LINE_BUFSIZE])
+static size_t next(char line[DYM_LINE_BUFSIZE])
 {
 	int ch;
 	size_t i = 0;
@@ -202,7 +195,7 @@ static size_t next(char line[LINE_BUFSIZE])
 		if (*explicit_list == '\0') {
 			return 0;
 		}
-		while ((ch = *explicit_list++) != '\0' && ch != delim && i < LINE_BUFSIZE - 2) {
+		while ((ch = *explicit_list++) != '\0' && ch != delim && i < DYM_LINE_BUFSIZE - 2) {
 			line[i++] = ch;
 		}
 		if (ch == '\0') {
@@ -211,7 +204,7 @@ static size_t next(char line[LINE_BUFSIZE])
 		line[i] = '\0';
 		return i-1;
 	}
-	if (fgets(line, LINE_BUFSIZE, fp) == NULL) {
+	if (fgets(line, DYM_LINE_BUFSIZE, fp) == NULL) {
 		return 0;
 	}
 	return strlen(line);
@@ -237,50 +230,4 @@ static void fatal(const char *fmt, ...)
 	}
 
 	exit(EXIT_FAILURE);
-}
-
-static int find_closest(const char *input, struct dym_match *closest, int count)
-{
-	int i;
-	char line[LINE_BUFSIZE];
-	size_t line_len;
-	int dist;
-	struct dym_match *match;
-	int found = 0;
-
-	for (i = 0; i < count; i++) {
-		closest[i].dist = UNSET_DISTANCE;
-	}
-
-	while ((line_len = next(line)) != 0) {
-		if (line_len == 0) {
-			/* Skip blank lines */
-			continue;
-		}
-		if (line[line_len-1] == '\n') {
-			line[line_len-1] = '\0';
-		}
-		if (iflag) {
-			lowercase(line);
-		}
-		dist = ops.edist(input, line);
-
-		for (i = 0; i < count; i++) {
-			match = &closest[i];
-			if (match->dist == UNSET_DISTANCE || dist < match->dist) {
-				if (match->dist == UNSET_DISTANCE) {
-					found++;
-				}
-				if (i + 1 < count) {
-					/* Shift things down, lowest dist is always first */
-					memmove(&closest[i+1], &closest[i], sizeof(struct dym_match) * (count - i - 1));
-				}
-				match->dist = dist;
-				strcpy(match->str, line);
-				break;
-			}
-		}
-	}
-
-	return found;
 }

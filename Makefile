@@ -1,6 +1,6 @@
 EXE_NAME = dym
 MAN_PAGE = dym.1
-SRC_FILES = dym.c edist.c lowercase.c
+SRC_FILES = dym.c edist.c lowercase.c closest.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 CC = cc
 CFLAGS = -O2 -Wall -Wextra -pedantic
@@ -8,8 +8,11 @@ PREFIX=/usr/local
 
 all: $(EXE_NAME)
 
-$(EXE_NAME): dym.o edist.o lowercase.o
+$(EXE_NAME): dym.o edist.o lowercase.o closest.o
 	$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) 
+
+closest.o: closest.c dym.h
+	$(CC) $(CFLAGS) -c $<
 
 dym.o: dym.c dym.h config.h lowercase.h
 	$(CC) $(CFLAGS) -c $<
