@@ -1,0 +1,65 @@
+.Dd August 3, 2020
+.Dt LIBDYM 3
+.Os
+.Sh NAME
+.Nm dym_edist ,
+.Nm dym_dl_edist ,
+.Nm dym_closest
+.Nd perform fuzzy (i.e. approximate) string matching
+.Sh LIBRARY
+.Lb libdym
+.Sh SYNOPSIS
+.In dym.h
+.Ft int
+.Fo dym_edist
+.Fa "const char *s1"
+.Fa "const char *s2"
+.Fc
+.Ft int
+.Fo dym_dl_edist
+.Fa "const char *s1"
+.Fa "const char *s2"
+.Fc
+.Ft int
+.Fo dym_closest
+.Fa "struct dym_ops *ops"
+.Fa "const char *input"
+.Fa "struct dym_match *closest"
+.Fa "int count"
+.Fc
+.Sh DESCRIPTION
+The
+.Fn dym_edist
+function is used to find the Levenshtein (edit) distance between two
+(NUL-terminated) strings. The Levenshtein distance is computed by finding the
+number of edits--additions, deletions, or substitutions (of characters)--that
+would transform one string into another.
+.Pp
+The
+.Fn dym_dl_edist
+function is used to find the Damerau-Levenshtein (edit) distance between two
+(NUL-terminated) strings. The Damerau-Levenshtein distance is calculated
+similarly to the Levenshtein distance, except it will also counts the
+"swapping" of two characters as an edit. Generally speaking, this algorithm is
+the best one to use for human languages.
+.Pp
+The
+.Fn dym_closest
+function will find the
+.Ar count
+.Ar closest
+matches to a particular
+.Ar input
+string and return the number of closest matches found.
+.Sh RETURNS
+Both the
+.Fn dym_edist
+end
+.Fn dym_dl_edist
+functions will return the number of edits required to transform one of its
+argument strings into the other. It will return 0 if the strings are the same.
+.Pp
+The
+.Fn dym_closest
+function will return the number of closest matches found, up to a maximum of
+.Ar count .
