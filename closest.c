@@ -26,6 +26,10 @@ int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closes
 		if (line[line_len-1] == '\n') {
 			line[line_len-1] = '\0';
 		}
+		if (line_len > DYM_LINE_BUFSIZE - 1) {
+			/* Line is too long, ignore it */
+			continue;
+		}
 		dist = ops->edist(input, line);
 
 		for (i = 0; i < count; i++) {
