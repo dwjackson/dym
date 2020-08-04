@@ -121,7 +121,12 @@ int main(int argc, char *argv[])
 		ops.edist = dym_edist;
 	}
 
+	if (optind >= argc) {
+		fatal("No input string was given");
+	}
+
 	input = argv[optind];
+
 	if (iflag) {
 		if (lowercase(input) != 0) {
 			fatal("Could not format string as lowercase: %s", input);
