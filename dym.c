@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 		switch (opt) {
 			case 'c':
 				count = atoi(optarg);
-				if (count == 0 || count > COUNT_MAX) {
+				if (count <= 0 || count > COUNT_MAX) {
 					fatal("count must be between 1 and %d", COUNT_MAX);
 				}
 				break;
@@ -153,6 +153,9 @@ int main(int argc, char *argv[])
 	}
 	for (i = 0; i < closest_found; i++) {
 		match = &closest[i];
+		if (match == NULL) {
+			continue;
+		}
 		if (mflag) {
 			printf("\t");
 		}
