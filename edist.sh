@@ -3,7 +3,7 @@
 # edist.sh
 #
 # Calculate the edit distance between two strings
-# The distance calculated is the Levenshtein distance
+# The distance calculated is the Damerau-Levenshtein distance
 
 USAGE='edit [WORD_1] [WORD_2]'
 
@@ -13,4 +13,4 @@ then
 	exit 1
 fi
 
-dym -d -e "$1" "$2"
+dym -D -d -e "$1" "$2"
