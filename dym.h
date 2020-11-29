@@ -17,6 +17,8 @@ struct dym_match {
 
 int dym_edist(const char *s1, const char *s2);
 int dym_dl_edist(const char *s1, const char *s2);
+struct dym_match *dym_closest_create(size_t count);
+void dym_closest_destroy(struct dym_match *closest);
 int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closest, int count);
 
 #endif /* DYM_H */

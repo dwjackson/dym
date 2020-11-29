@@ -5,6 +5,16 @@
 
 #define UNSET_DISTANCE -1
 
+struct dym_match *dym_closest_create(size_t count)
+{
+	return calloc(count, sizeof(struct dym_match));
+}
+
+void dym_closest_destroy(struct dym_match *closest)
+{
+	free(closest);
+}
+
 int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closest, int count)
 {
 	int i;

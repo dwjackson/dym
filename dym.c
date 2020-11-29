@@ -141,9 +141,9 @@ int main(int argc, char *argv[])
 	}
 
 	/* Find the closest "count" matches */
-	closest = calloc(count, sizeof(struct dym_match));
+	closest = dym_closest_create(count);
 	if (closest == NULL) {
-		fatal("calloc");
+		fatal("dym_closest_create");
 	}
 	closest_found = dym_closest(&ops, input, closest, count);
 
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 		printf("\n");
 	}
 
-	free(closest);
+	dym_closest_destroy(closest);
 	fclose(fp);
 
 	return 0;
