@@ -21,7 +21,7 @@ int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closes
 {
 	int i;
 	char line[DYM_LINE_BUFSIZE];
-	size_t line_len;
+	int line_len;
 	int dist;
 	struct dym_match *match;
 	int found = 0;
@@ -30,7 +30,7 @@ int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closes
 		closest[i].dist = UNSET_DISTANCE;
 	}
 
-	while ((line_len = ops->next(line)) != 0) {
+	while ((line_len = ops->next(line)) >= 0) {
 		if (line_len == 0) {
 			/* Skip blank lines */
 			continue;

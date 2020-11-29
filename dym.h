@@ -6,7 +6,7 @@
 #define DYM_LINE_BUFSIZE 100
 
 struct dym_ops {
-	size_t (*next)(char line[DYM_LINE_BUFSIZE]);
+	int (*next)(char line[DYM_LINE_BUFSIZE]);
 	int (*edist)(const char *s1, const char *s2);
 };
 

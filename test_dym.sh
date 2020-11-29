@@ -62,6 +62,12 @@ test_explicit_list_with_delim() {
 	assert_eq "start" "$actual"
 }
 
+test_explicit_list_with_delim_2() {
+	echo 'test_explicit_list_with_delim'
+	actual=`./dym -F ',' -e 'this,is,a,test' 'tset'`
+	assert_eq "test" "$actual"
+}
+
 test_unicode() {
 	echo 'test_unicode'
 	actual=`./dym -v -i -e 'über uber' 'Über'`
@@ -98,4 +104,5 @@ test_unicode
 test_explicit_list_2
 test_edit_distance
 test_explicit_list_with_preceding_and_trailing_spaces
+test_explicit_list_with_delim_2
 echo 'All tests passed!'

@@ -13,7 +13,7 @@
 
 static void usage(const char *progname);
 static void help(const char *progname);
-static size_t next();
+static int next();
 static void fatal(const char *fmt, ...);
 
 static struct dym_ops ops = { 0 };
@@ -194,13 +194,13 @@ static void help(const char *progname)
 	printf("\t-V print version number\n");
 }
 
-static size_t next(char line[DYM_LINE_BUFSIZE])
+static int next(char line[DYM_LINE_BUFSIZE])
 {
 	int ch;
 	size_t i = 0;
 	if (eflag) {
 		if (*explicit_list == '\0') {
-			return 0;
+			return -1;
 		}
 		while ((ch = *explicit_list++) != '\0' && ch != delim && i < DYM_LINE_BUFSIZE - 2) {
 			line[i++] = ch;
@@ -212,13 +212,15 @@ static size_t next(char line[DYM_LINE_BUFSIZE])
 		if (iflag) {
 			lowercase(line);
 		}
-		return i-1;
+		return i;
 	}
 	if (fgets(line, DYM_LINE_BUFSIZE, fp) == NULL) {
-		return 0;
+		return -1;
 	}
 	if (iflag) {
-		lowercase(line);
+		if (lowercase(line) != 0) {
+			fatal("lowercase");
+		}
 	}
 	return strlen(line);
 }
