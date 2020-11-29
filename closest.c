@@ -5,6 +5,8 @@
 
 #define UNSET_DISTANCE -1
 
+static void shift_down(struct dym_match *closest, int count, int i);
+
 struct dym_match *dym_closest_create(size_t count)
 {
 	return calloc(count, sizeof(struct dym_match));
@@ -49,8 +51,7 @@ int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closes
 					found++;
 				}
 				if (i + 1 < count) {
-					/* Shift things down, lowest dist is always first */
-					memmove(&closest[i+1], &closest[i], sizeof(struct dym_match) * (count - i - 1));
+					shift_down(closest, count, i);
 				}
 				match->dist = dist;
 				strcpy(match->str, line);
@@ -60,4 +61,11 @@ int dym_closest(struct dym_ops *ops, const char *input, struct dym_match *closes
 	}
 
 	return found;
+}
+
+/* Shift things down, lowest dist is always first */
+static void shift_down(struct dym_match *closest, int count, int i)
+{
+	size_t s = sizeof(struct dym_match) * (count - i - 1);
+	memmove(&closest[i+1], &closest[i], s);
 }
