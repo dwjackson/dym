@@ -63,7 +63,7 @@ test_explicit_list_with_delim() {
 }
 
 test_explicit_list_with_delim_2() {
-	echo 'test_explicit_list_with_delim'
+	echo 'test_explicit_list_with_delim_2'
 	actual=`./dym -F ',' -e 'this,is,a,test' 'tset'`
 	assert_eq "test" "$actual"
 }
