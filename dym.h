@@ -5,6 +5,14 @@
 
 #define DYM_LINE_BUFSIZE 100
 
+/*
+ * DYM Operations
+ *
+ * next() returns the number of characters in the line on success and -1 on
+ * failure or end-of-input
+ *
+ * edist() is the edit distance function to use
+ */
 struct dym_ops {
 	int (*next)(char line[DYM_LINE_BUFSIZE]);
 	int (*edist)(const char *s1, const char *s2);

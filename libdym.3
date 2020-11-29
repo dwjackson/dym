@@ -4,6 +4,8 @@
 .Sh NAME
 .Nm dym_edist ,
 .Nm dym_dl_edist ,
+.Nm dym_closest_create ,
+.Nm dym_closest_destroy ,
 .Nm dym_closest
 .Nd perform fuzzy (i.e. approximate) string matching
 .Sh LIBRARY
@@ -19,6 +21,14 @@
 .Fo dym_dl_edist
 .Fa "const char *s1"
 .Fa "const char *s2"
+.Fc
+.Ft struct dym_match
+.Fo dym_closest_create
+.Fa "size_t count"
+.Fc
+.Ft void
+.Fo dym_closest_destroy
+.Fa "struct dym_match *closest"
 .Fc
 .Ft int
 .Fo dym_closest
@@ -50,7 +60,8 @@ function will find the
 .Ar closest
 matches to a particular
 .Ar input
-string and return the number of closest matches found.
+string and return the number of closest matches found. The array passed to it
+should be created with dym_closest_create and freed by dym_closest_destroy.
 .Sh RETURNS
 Both the
 .Fn dym_edist
