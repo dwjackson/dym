@@ -12,6 +12,7 @@
 #define COUNT_MAX 1000
 
 static void usage(const char *progname);
+static void examples();
 static void help(const char *progname);
 static int next();
 static void fatal(const char *fmt, ...);
@@ -47,6 +48,7 @@ int main(int argc, char *argv[])
 
 	if (argc < 2) {
 		usage(argv[0]);
+		examples();
 		exit(EXIT_FAILURE);
 	}
 	fp = stdin;
@@ -180,7 +182,7 @@ static void help(const char *progname)
 {
 
 	usage(progname);
-	printf("Options:\n");
+	printf("OPTIONS\n");
 	printf("\t-c [COUNT] print up to COUNT closest matches\n");
 	printf("\t-D use the Damerau-Levenshtein distance\n");
 	printf("\t-d print only the edit distance to closest match(es)\n");
@@ -192,6 +194,8 @@ static void help(const char *progname)
 	printf("\t-m [MESSAGE] print MESSAGE before the match(es)\n");
 	printf("\t-v verbose mode, print edit distance of each closest match\n");
 	printf("\t-V print version number\n");
+
+	examples();
 }
 
 static int next(char line[DYM_LINE_BUFSIZE])
@@ -223,6 +227,17 @@ static int next(char line[DYM_LINE_BUFSIZE])
 		}
 	}
 	return strlen(line);
+}
+
+static void examples()
+{
+	printf("\nEXAMPLES\n\n");
+	printf("\tDetermine the closest match to a word, from a literal list, using the\n\tDamera-Levenshtein algorithm:\n\n");
+	printf("\t\t$ dym -D -v -F',' -e 'this,is,a,test' 'tset'\n");
+	printf("\t\ttest 1\n\n");
+	printf("\tPiping data to dym within a shell script:\n\n");
+	printf("\t\t$ cat /usr/share/dict/british | dym 'dicshionaby'\n");
+	printf("\t\tdictionary\n\n");
 }
 
 static void usage(const char *progname)
