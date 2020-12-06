@@ -27,6 +27,9 @@ exit 0. When multiple closest matches are desired and more than one string are
 the closest match, break the tie based on which word appeared first in the list
 of valid strings.
 .Pp
+Note that the matching is based on treating the strings as simple arrays of
+bytes, so encoding will matter.
+.Pp
 The possible arguments are as follows:
 .Bl -tag -width Ds
 .It Fl c Ar count

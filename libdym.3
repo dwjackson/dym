@@ -74,3 +74,7 @@ The
 .Fn dym_closest
 function will return the number of closest matches found, up to a maximum of
 .Ar count .
+.Sh UNICODE
+This library does not make any assumptions about the encoding of the data. The
+edit distances are based on treating the strings as simple arrays of bytes and
+the "edits" are based only on these bytes.
