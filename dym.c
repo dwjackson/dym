@@ -243,6 +243,7 @@ static void examples()
 static void usage(const char *progname)
 {
 	printf("USAGE: %s [ARGS...] [STRING]\n", progname);
+	printf("By default, possible matches are read one-per-line from stdin\n");
 	printf("To see all options: %s -h\n", progname);
 }
 
