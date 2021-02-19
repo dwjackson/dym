@@ -232,7 +232,7 @@ static int next(char line[DYM_LINE_BUFSIZE])
 static void examples()
 {
 	printf("\nEXAMPLES\n\n");
-	printf("\tDetermine the closest match to a word, from a literal list, using the\n\tDamera-Levenshtein algorithm:\n\n");
+	printf("\tDetermine the closest match to a word, from a literal list, using the\n\tDamerau-Levenshtein algorithm:\n\n");
 	printf("\t\t$ dym -D -v -F',' -e 'this,is,a,test' 'tset'\n");
 	printf("\t\ttest 1\n\n");
 	printf("\tPiping data to dym within a shell script:\n\n");
