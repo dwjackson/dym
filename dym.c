@@ -242,8 +242,12 @@ static void examples()
 
 static void usage(const char *progname)
 {
-	printf("USAGE: %s [ARGS...] [STRING]\n", progname);
-	printf("By default, possible matches are read one-per-line from stdin\n");
+	printf("USAGE: %s [ARGS...] [STRING]\n\n", progname);
+	printf("dym is a tool that is used to do fuzzy string matching and/or to find the\n");
+	printf("edit distance between strings. To do this, you pass a string and a set of\n");
+	printf("possible matches against which that string's edit distance is computed.\n\n");
+	printf("By default, possible matches are read one-per-line from stdin and the\n");
+	printf("closest match is printed to stdout.\n\n");
 	printf("To see all options: %s -h\n", progname);
 }
 
